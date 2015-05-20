@@ -9,7 +9,7 @@
 #import "BarcodeReaderViewController.h"
 #import <AVFoundation/AVFoundation.h>
 
-@interface BarcodeReaderViewController () <AVCaptureMetadataOutputObjectsDelegate>
+@interface BarcodeReaderViewController () <AVCaptureMetadataOutputObjectsDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *interestView;
 
@@ -50,7 +50,16 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [self startReading];
+    if (![self startReading]) {
+        [self stopReading];
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle:@"错误"
+                              message:@"访问摄像头失败，请确认程序有权访问摄像头！"
+                              delegate:self
+                              cancelButtonTitle:@"确定"
+                              otherButtonTitles:@"取消",nil];
+        [alert show];
+    }
 }
 
 - (BOOL)startReading {
@@ -60,7 +69,7 @@
     
     AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:captureDevice error:&error];
     
-    if (!input) {
+    if (nil == input) {         ///<无法访问摄像头，可能是用户禁止访问
         NSLog(@"%@", [error localizedDescription]);
         return NO;
     }
@@ -254,4 +263,12 @@
     CGContextDrawPath(context, kCGPathStroke);
 }
 
+#pragma mark
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    if (buttonIndex == 0) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+    }
+}
 @end
