@@ -1,9 +1,9 @@
 //
 //  BarcodeReaderViewController.h
-//  htl
+//  tbago
 //
 //  Created by anxs on 15/5/19.
-//  Copyright (c) 2015年 guofeng. All rights reserved.
+//  Copyright (c) 2015年 tbago. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
