@@ -25,7 +25,7 @@ iOS版本二维码扫描，采用AVFoundation实现，支持iOS 7及以上版本
 
 ## 联系 Support
 * 发现问题请issues我，谢谢:)
-* Email:owner@tbao.com
+* Email:owner@tbago.com
 * Blog: http://www.tbago.com/
 
 ## 授权 License
