@@ -14,6 +14,9 @@
 		F4A309671B0C422C00F3DF6A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4A309661B0C422C00F3DF6A /* Images.xcassets */; };
 		F4A3096A1B0C422C00F3DF6A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A309681B0C422C00F3DF6A /* LaunchScreen.xib */; };
 		F4A309761B0C422C00F3DF6A /* BarcodeReaderTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A309751B0C422C00F3DF6A /* BarcodeReaderTestTests.m */; };
+		F4A309841B0C424100F3DF6A /* BarcodeReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A309811B0C424100F3DF6A /* BarcodeReaderViewController.m */; };
+		F4A309851B0C424100F3DF6A /* BarcodeStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4A309821B0C424100F3DF6A /* BarcodeStoryboard.storyboard */; };
+		F4A309861B0C424100F3DF6A /* beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F4A309831B0C424100F3DF6A /* beep.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,10 @@
 		F4A3096F1B0C422C00F3DF6A /* BarcodeReaderTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BarcodeReaderTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4A309741B0C422C00F3DF6A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F4A309751B0C422C00F3DF6A /* BarcodeReaderTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BarcodeReaderTestTests.m; sourceTree = "<group>"; };
+		F4A309801B0C424100F3DF6A /* BarcodeReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarcodeReaderViewController.h; sourceTree = "<group>"; };
+		F4A309811B0C424100F3DF6A /* BarcodeReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarcodeReaderViewController.m; sourceTree = "<group>"; };
+		F4A309821B0C424100F3DF6A /* BarcodeStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = BarcodeStoryboard.storyboard; sourceTree = "<group>"; };
+		F4A309831B0C424100F3DF6A /* beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +88,7 @@
 		F4A309581B0C422C00F3DF6A /* BarcodeReaderTest */ = {
 			isa = PBXGroup;
 			children = (
+				F4A3097F1B0C424100F3DF6A /* BarcodeReader */,
 				F4A3095D1B0C422C00F3DF6A /* AppDelegate.h */,
 				F4A3095E1B0C422C00F3DF6A /* AppDelegate.m */,
 				F4A309601B0C422C00F3DF6A /* ViewController.h */,
@@ -117,6 +125,17 @@
 				F4A309741B0C422C00F3DF6A /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F4A3097F1B0C424100F3DF6A /* BarcodeReader */ = {
+			isa = PBXGroup;
+			children = (
+				F4A309801B0C424100F3DF6A /* BarcodeReaderViewController.h */,
+				F4A309811B0C424100F3DF6A /* BarcodeReaderViewController.m */,
+				F4A309821B0C424100F3DF6A /* BarcodeStoryboard.storyboard */,
+				F4A309831B0C424100F3DF6A /* beep.mp3 */,
+			);
+			path = BarcodeReader;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -199,6 +218,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4A309851B0C424100F3DF6A /* BarcodeStoryboard.storyboard in Resources */,
+				F4A309861B0C424100F3DF6A /* beep.mp3 in Resources */,
 				F4A309651B0C422C00F3DF6A /* Main.storyboard in Resources */,
 				F4A3096A1B0C422C00F3DF6A /* LaunchScreen.xib in Resources */,
 				F4A309671B0C422C00F3DF6A /* Images.xcassets in Resources */,
@@ -221,6 +242,7 @@
 			files = (
 				F4A309621B0C422C00F3DF6A /* ViewController.m in Sources */,
 				F4A3095F1B0C422C00F3DF6A /* AppDelegate.m in Sources */,
+				F4A309841B0C424100F3DF6A /* BarcodeReaderViewController.m in Sources */,
 				F4A3095C1B0C422C00F3DF6A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
