@@ -1,5 +1,5 @@
 # BarcodeReader
-iOS版本二维码扫描，参照QQ二维码扫描，采用屏幕特定区域扫描。效果图如下：
+iOS版本二维码扫描，采用AVFoundation实现，支持iOS 7及以上版本。界面设计参照了QQ的二维码扫描，采用屏幕特定区域扫描。具体效果图如下：
 ![ScreenShot](https://raw.githubusercontent.com/tbago/BarcodeReader/master/BarcodeReaderScreen.PNG)
 当在屏幕绘制的矩形区域扫描到二维码后会通过声音提醒，同时返回到上一试图，并触发delegate函数。具体参照demo代码。
 ##调用示例代码:
