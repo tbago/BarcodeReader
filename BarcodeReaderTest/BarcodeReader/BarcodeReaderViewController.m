@@ -106,11 +106,30 @@
     [self.videoPreviewLayer setFrame:self.view.layer.bounds];
     self.videoPreviewLayer.connection.videoOrientation = [[UIDevice currentDevice] orientation];
     [self.view.layer addSublayer:self.videoPreviewLayer];
-    
-    //add it to our view
+
+///<add scan valid area
     [self.view.layer addSublayer:self.borderLayer];
     [self.borderLayer setNeedsDisplay];
     
+///<add scan animation line
+    const float lineHeight = 2.0f;
+    CGRect scanLineViewRect = CGRectMake(cropRect.origin.x + self.areaWidth * 3, cropRect.origin.y + self.areaWidth * 3, cropRect.size.width - self.areaWidth * 6, lineHeight);
+    UIView *scanLineView = [[UIView alloc] initWithFrame:scanLineViewRect];
+    scanLineView.backgroundColor = [UIColor redColor];
+    scanLineView.layer.cornerRadius = 2.0;
+    scanLineView.layer.shadowColor = [UIColor redColor].CGColor;
+    scanLineView.layer.shadowOffset = CGSizeMake(0.5, 0.5);
+    scanLineView.layer.shadowOpacity = 0.6;
+    scanLineView.layer.shadowRadius = 2.0;
+    
+    [UIView animateWithDuration:3.0 delay:0.0 options: UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveEaseIn animations:^{
+        scanLineView.frame = CGRectMake(cropRect.origin.x + self.areaWidth * 3, cropRect.origin.y + cropRect.size.height - self.areaWidth * 6,
+                                        cropRect.size.width - self.areaWidth * 6, lineHeight);
+    } completion:nil];
+    
+    [self.view addSubview:scanLineView];
+    
+///<add cancel button
     [self.view addSubview:self.deleteButton];
     self.tipLabel.hidden = NO;
     [self.view addSubview:self.tipLabel];
