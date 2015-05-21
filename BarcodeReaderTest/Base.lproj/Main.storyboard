@@ -17,19 +17,30 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lDu-GT-wy5">
-                                <rect key="frame" x="249" y="285" width="103" height="30"/>
-                                <state key="normal" title="Scan QR Code">
+                                <rect key="frame" x="231" y="285" width="138" height="30"/>
+                                <state key="normal" title="Scan Only QR Code">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="scanQRCodeButtonClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tLN-k8-ob7"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="szZ-yz-Kcp">
+                                <rect key="frame" x="216" y="316" width="169" height="30"/>
+                                <state key="normal" title="Scan  Common Barcode">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="scanBarcodeButtonClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ztX-CL-xqW"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="szZ-yz-Kcp" firstAttribute="top" secondItem="lDu-GT-wy5" secondAttribute="bottom" constant="1" id="HnC-xb-vjR"/>
                             <constraint firstAttribute="centerX" secondItem="lDu-GT-wy5" secondAttribute="centerX" id="nk5-Xt-70u"/>
                             <constraint firstAttribute="centerY" secondItem="lDu-GT-wy5" secondAttribute="centerY" id="nyS-Qi-c9K"/>
+                            <constraint firstAttribute="centerX" secondItem="szZ-yz-Kcp" secondAttribute="centerX" id="uac-Or-PTc"/>
                         </constraints>
                     </view>
                 </viewController>

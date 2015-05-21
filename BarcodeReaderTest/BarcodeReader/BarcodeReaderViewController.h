@@ -8,12 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
+enum ScanType
+{
+    QRCode,     ///<只支持二维码扫描
+    BarCode,    ///<同时支持二维码和条形码
+};
+
 @protocol BarcodeReaderViewControllerDelegate <NSObject>
 
-- (void)scanedQRCode:(NSString *) qrCode;
+- (void)scanedBarcodeResult:(NSString *) barcodeResult;
 @end
 
 @interface BarcodeReaderViewController : UIViewController
 
 @property(nonatomic,strong) id<BarcodeReaderViewControllerDelegate> delegate;
+
+@property(nonatomic) enum ScanType scanType;
 @end

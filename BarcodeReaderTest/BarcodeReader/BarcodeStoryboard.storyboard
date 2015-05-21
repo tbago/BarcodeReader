@@ -24,15 +24,24 @@
                                     <constraint firstAttribute="width" constant="250" id="yoE-p2-r7F"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="将二维码/条形码放到框内" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S5k-bv-svj">
+                                <rect key="frame" x="209" y="441" width="182" height="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.9579979482323232" green="0.9579979482323232" blue="0.9579979482323232" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="ivc-vk-Ka3" secondAttribute="centerY" id="CJ8-h6-7Mh"/>
+                            <constraint firstItem="S5k-bv-svj" firstAttribute="top" secondItem="ivc-vk-Ka3" secondAttribute="bottom" constant="16" id="OTq-km-dSR"/>
+                            <constraint firstAttribute="centerX" secondItem="S5k-bv-svj" secondAttribute="centerX" id="SZo-ci-g1Y"/>
                             <constraint firstAttribute="centerX" secondItem="ivc-vk-Ka3" secondAttribute="centerX" id="eUV-6b-tMx"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="interestView" destination="ivc-vk-Ka3" id="BPP-5F-aPx"/>
+                        <outlet property="tipLabel" destination="S5k-bv-svj" id="ooj-8V-4K2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="utA-AX-6JM" userLabel="First Responder" sceneMemberID="firstResponder"/>

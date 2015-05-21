@@ -12,6 +12,7 @@
 @interface BarcodeReaderViewController () <AVCaptureMetadataOutputObjectsDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *interestView;
+@property(nonatomic,weak) IBOutlet UILabel  *tipLabel;
 
 @property (nonatomic) BOOL isReading;
 
@@ -41,6 +42,8 @@
     self.areaWidth = 3.0f;
     self.areaXWidth = 30.0f;
     self.areaYHeight = 30.0f;
+    
+    self.tipLabel.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -52,12 +55,11 @@
 {
     if (![self startReading]) {
         [self stopReading];
-        UIAlertView *alert = [[UIAlertView alloc]
-                              initWithTitle:@"错误"
-                              message:@"访问摄像头失败，请确认程序有权访问摄像头！"
-                              delegate:self
-                              cancelButtonTitle:@"确定"
-                              otherButtonTitles:@"取消",nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"错误"
+                                                        message:@"访问摄像头失败，请确认程序有权访问摄像头！"
+                                                       delegate:self
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:@"取消",nil];
         [alert show];
     }
 }
@@ -84,7 +86,12 @@
     dispatch_queue_t dispatchQueue;
     dispatchQueue = dispatch_queue_create("myQueue", NULL);
     [captureMetadataOutput setMetadataObjectsDelegate:self queue:dispatchQueue];
-    [captureMetadataOutput setMetadataObjectTypes:[NSArray arrayWithObject:AVMetadataObjectTypeQRCode]];
+    if (self.scanType == QRCode) {
+        [captureMetadataOutput setMetadataObjectTypes:[NSArray arrayWithObject:AVMetadataObjectTypeQRCode]];
+    }
+    else {
+        [captureMetadataOutput setMetadataObjectTypes:[NSArray arrayWithObjects:AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode128Code, AVMetadataObjectTypeQRCode, nil]];
+    }
     
     CGRect cropRect = self.interestView.frame;
     CGSize size = self.view.bounds.size;
@@ -105,6 +112,9 @@
     [self.borderLayer setNeedsDisplay];
     
     [self.view addSubview:self.deleteButton];
+    self.tipLabel.hidden = NO;
+    [self.view addSubview:self.tipLabel];
+    
     [self.captureSession startRunning];
     
     return YES;
@@ -145,10 +155,11 @@
                           action:@selector(deleteButtonClick:)
                 forControlEvents:UIControlEventTouchUpInside];
         [_deleteButton setTitle:@"X" forState:UIControlStateNormal];
-        _deleteButton.frame = CGRectMake(self.view.bounds.size.width - 100, 100.0f, 30.0, 30.0);
-        _deleteButton.layer.cornerRadius = 15.0;
+        _deleteButton.titleLabel.font = [UIFont systemFontOfSize: 30.0];
+        _deleteButton.frame = CGRectMake(self.view.bounds.size.width * 0.8, self.view.bounds.size.height * 0.1, 40.0, 40.0);
+        _deleteButton.layer.cornerRadius = 20.0;
         [_deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        _deleteButton.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        _deleteButton.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.2];
     }
     return _deleteButton;
 }
@@ -164,8 +175,14 @@
 -(void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection{
     if (metadataObjects != nil && [metadataObjects count] > 0) {
         AVMetadataMachineReadableCodeObject *metadataObj = [metadataObjects objectAtIndex:0];
-        if ([[metadataObj type] isEqualToString:AVMetadataObjectTypeQRCode])
+        if (self.scanType == QRCode && [[metadataObj type] isEqualToString:AVMetadataObjectTypeQRCode])
         {
+            if (self.audioPlayer) {
+                [self.audioPlayer play];
+            }
+            [self performSelectorOnMainThread:@selector(callDelegateAndGoBack:) withObject:[metadataObj stringValue] waitUntilDone:NO];
+        }
+        else if (self.scanType == BarCode) {
             if (self.audioPlayer) {
                 [self.audioPlayer play];
             }
@@ -174,11 +191,11 @@
     }
 }
 
-- (void)callDelegateAndGoBack:(NSString *) qrCode
+- (void)callDelegateAndGoBack:(NSString *) barcodeResult
 {
     [self stopReading];
     if (self.delegate) {
-        [self.delegate scanedQRCode:qrCode];
+        [self.delegate scanedBarcodeResult:barcodeResult];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
