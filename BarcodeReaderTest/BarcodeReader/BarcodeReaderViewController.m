@@ -11,8 +11,10 @@
 
 @interface BarcodeReaderViewController () <AVCaptureMetadataOutputObjectsDelegate, UIAlertViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UIView *interestView;
-@property(nonatomic,weak) IBOutlet UILabel  *tipLabel;
+@property(weak, nonatomic) IBOutlet UIView      *videoRenderView;
+@property(weak, nonatomic) IBOutlet UIView      *interestView;
+@property(weak, nonatomic) IBOutlet UILabel     *tipLabel;
+@property(weak, nonatomic) IBOutlet UIButton    *cancelButton;
 
 @property (nonatomic) BOOL isReading;
 
@@ -27,8 +29,6 @@
 
 @property(nonatomic, strong) CALayer *borderLayer;
 
-@property(nonatomic,strong) UIButton        *deleteButton;
-
 @end
 
 @implementation BarcodeReaderViewController
@@ -42,6 +42,8 @@
     self.areaWidth = 3.0f;
     self.areaXWidth = 30.0f;
     self.areaYHeight = 30.0f;
+    
+    self.cancelButton.layer.cornerRadius = self.cancelButton.frame.size.width / 2.0;
     
     self.tipLabel.hidden = YES;
 }
@@ -94,26 +96,26 @@
     }
     
     CGRect cropRect = self.interestView.frame;
-    CGSize size = self.view.bounds.size;
+    CGSize containSize = self.videoRenderView.bounds.size;
     
-    captureMetadataOutput.rectOfInterest = CGRectMake(cropRect.origin.x/size.width,
-                                                      cropRect.origin.y/size.height,
-                                                      cropRect.size.width/size.width,
-                                                      cropRect.size.height/size.height);
+    captureMetadataOutput.rectOfInterest = CGRectMake(cropRect.origin.x/containSize.width,
+                                                      cropRect.origin.y/containSize.height,
+                                                      cropRect.size.width/containSize.width,
+                                                      cropRect.size.height/containSize.height);
     
     self.videoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.captureSession];
     [self.videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [self.videoPreviewLayer setFrame:self.view.layer.bounds];
     self.videoPreviewLayer.connection.videoOrientation = [[UIDevice currentDevice] orientation];
-    [self.view.layer addSublayer:self.videoPreviewLayer];
+    [self.videoRenderView.layer addSublayer:self.videoPreviewLayer];
 
 ///<add scan valid area
-    [self.view.layer addSublayer:self.borderLayer];
+    [self.interestView.layer addSublayer:self.borderLayer];
     [self.borderLayer setNeedsDisplay];
     
 ///<add scan animation line
     const float lineHeight = 2.0f;
-    CGRect scanLineViewRect = CGRectMake(cropRect.origin.x + self.areaWidth * 3, cropRect.origin.y + self.areaWidth * 3, cropRect.size.width - self.areaWidth * 6, lineHeight);
+    CGRect scanLineViewRect = CGRectMake(self.areaWidth * 3, self.areaWidth * 3, cropRect.size.width - self.areaWidth * 6, lineHeight);
     UIView *scanLineView = [[UIView alloc] initWithFrame:scanLineViewRect];
     scanLineView.backgroundColor = [UIColor redColor];
     scanLineView.layer.cornerRadius = 2.0;
@@ -123,16 +125,13 @@
     scanLineView.layer.shadowRadius = 2.0;
     
     [UIView animateWithDuration:3.0 delay:0.0 options: UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveEaseIn animations:^{
-        scanLineView.frame = CGRectMake(cropRect.origin.x + self.areaWidth * 3, cropRect.origin.y + cropRect.size.height - self.areaWidth * 6,
+        scanLineView.frame = CGRectMake(self.areaWidth * 3, cropRect.size.height - self.areaWidth * 6,
                                         cropRect.size.width - self.areaWidth * 6, lineHeight);
     } completion:nil];
     
-    [self.view addSubview:scanLineView];
+    [self.interestView addSubview:scanLineView];
     
-///<add cancel button
-    [self.view addSubview:self.deleteButton];
     self.tipLabel.hidden = NO;
-    [self.view addSubview:self.tipLabel];
     
     [self.captureSession startRunning];
     
@@ -165,25 +164,7 @@
     }
 }
 
-- (UIButton *)deleteButton
-{
-    if (nil == _deleteButton)
-    {
-        _deleteButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [_deleteButton addTarget:self
-                          action:@selector(deleteButtonClick:)
-                forControlEvents:UIControlEventTouchUpInside];
-        [_deleteButton setTitle:@"X" forState:UIControlStateNormal];
-        _deleteButton.titleLabel.font = [UIFont systemFontOfSize: 30.0];
-        _deleteButton.frame = CGRectMake(self.view.bounds.size.width * 0.8, self.view.bounds.size.height * 0.1, 40.0, 40.0);
-        _deleteButton.layer.cornerRadius = 20.0;
-        [_deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        _deleteButton.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.2];
-    }
-    return _deleteButton;
-}
-
-- (void)deleteButtonClick:(id)sender
+- (IBAction)cancelButtonClick:(id)sender
 {
     [self performSelectorOnMainThread:@selector(callDelegateAndGoBack:)
                            withObject:nil
@@ -210,6 +191,7 @@
     }
 }
 
+#pragma mark - protocal
 - (void)callDelegateAndGoBack:(NSString *) barcodeResult
 {
     [self stopReading];
@@ -218,6 +200,17 @@
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    if (buttonIndex == 0) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+    }
+}
+
+#pragma mark - rotate support
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
@@ -234,14 +227,24 @@
         case UIInterfaceOrientationLandscapeRight:
             self.videoPreviewLayer.connection.videoOrientation = AVCaptureVideoOrientationLandscapeRight;
             break;
+        case UIInterfaceOrientationUnknown:
+            break;
+        default:
+            break;
     }
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    self.videoPreviewLayer.frame = self.videoRenderView.frame;
+}
+
+#pragma mark - get & set
 - (CALayer *)borderLayer
 {
     if (nil == _borderLayer) {
         _borderLayer = [CALayer layer];
-        _borderLayer.frame = self.interestView.frame;
+        _borderLayer.frame = self.interestView.bounds;
         _borderLayer.delegate = self;
     }
     return _borderLayer;
@@ -299,12 +302,4 @@
     CGContextDrawPath(context, kCGPathStroke);
 }
 
-#pragma mark
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-    if (buttonIndex == 0) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-    }
-}
 @end
